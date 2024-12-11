@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "lib": ["es2020", "dom"], // 确保包含必要的库
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "ES2020",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
