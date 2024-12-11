@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  password String
+  realName String?
+  email String?
+  phone String?
+  userType Int @default(0) // 0: 普通用户, 1: 管理员
+  status Int @default(0) // 0: 正常, 1: 禁用
+  createTime DateTime @default(now())
+  updateTime DateTime @updatedAt
+  deleted Boolean @default(false)
+
+  borrowings Borrowing[]
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String
+  parentId Int?
+  description String?
+  createAt DateTime @default(now())
+  deleted Boolean @default(false)
+
+  books Book[]
+  parent Category? @relation("CategoryParent", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryParent")
+}
+
+model Book {
+  id Int @id @default(autoincrement())
+  isbn           String    @unique
+  title          String
+  author         String?
+  publisher      String?
+  categoryId     Int?
+  publishDate    DateTime?
+  totalCopies    Int       @default(0)
+  availableCopies Int      @default(0)
+  location       String?
+  status         Int       @default(1) // 0: 下架, 1: 正常
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deleted        Boolean   @default(false)
+
+  category Category? @relation(fields: [categoryId], references: [id])
+  borrowings Borrowing[]
+}
+
+model Borrowing {
+  id Int @id @default(autoincrement())
+  userId Int
+  bookId Int
+  borrowDate DateTime @default(now())
+  dueDate    DateTime
+  returnDate DateTime?
+  status     Int      @default(0) // 0: 借出, 1: 已还, 2: 超期
+  createdAt  DateTime @default(now())
+  deleted    Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+}
