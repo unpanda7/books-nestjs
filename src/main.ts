@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import { patchNestJsSwagger } from 'nestjs-zod';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  patchNestJsSwagger();
 
   const config = new DocumentBuilder()
     .setTitle('图书管理系统')
