@@ -68,7 +68,6 @@ model Borrowing {
   bookId Int
   borrowDate DateTime @default(now())
   dueDate    DateTime
-  returnDate DateTime?
   status     Int      @default(0) // 0: 借出, 1: 已还, 2: 超期
   createdAt  DateTime @default(now())
   deleted    Boolean  @default(false)
